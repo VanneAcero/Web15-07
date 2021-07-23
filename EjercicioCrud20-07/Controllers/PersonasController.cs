@@ -1,5 +1,6 @@
 ﻿using EjercicioCrud20_07.Data;
 using EjercicioCrud20_07.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace EjercicioCrud20_07.Controllers
 {
+    [Authorize]
     public class PersonasController : Controller
     {
+                    
         private readonly ApplicationDbContext _applicationDbContext;
         public PersonasController (ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
-
+        [Authorize (Roles ="Generador,Cliente")] 
         public IActionResult Index()
         {
             List<Persona> personas = new List<Persona>();
@@ -34,6 +37,7 @@ namespace EjercicioCrud20_07.Controllers
             
 
         }
+        [Authorize(Roles = "Generador, Cliente")]
         public IActionResult Details(int Codigo)
         {
 
@@ -44,17 +48,19 @@ namespace EjercicioCrud20_07.Controllers
                 return RedirectToAction("Index");
             return View(persona);
         }
+        [Authorize(Roles = "Generador")]
         public IActionResult Create()
         {
             
             return View();
         }
+        [Authorize(Roles = "Generador")]
         [HttpPost]
         public IActionResult Create(Persona persona)
         {
             try
             {
-                
+                persona.Estado = 1;
                 _applicationDbContext.Add(persona);
                 _applicationDbContext.SaveChanges();
             }
@@ -65,6 +71,7 @@ namespace EjercicioCrud20_07.Controllers
             
             return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Generador")]
         public IActionResult Edit(int id)
         {
             if (id == 0)
@@ -77,6 +84,7 @@ namespace EjercicioCrud20_07.Controllers
                 return RedirectToAction("Index");
             return View(persona);
         }
+        [Authorize(Roles = "Generador")]
         [HttpPost]
         public IActionResult Edit (int id,Persona persona)
         {
@@ -95,27 +103,7 @@ namespace EjercicioCrud20_07.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult Delete (int id)
-        {
-            if (id == 0)
-
-                return RedirectToAction("Index");
-
-
-            Persona persona = _applicationDbContext.Persona.Where(v => v.Codigo == id).FirstOrDefault();
-            try
-            {
-                _applicationDbContext.Remove(persona);
-                _applicationDbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-               
-                return RedirectToAction("Index");
-            }
-                return RedirectToAction("Index");
-            
-        }
+        [Authorize(Roles = "Generador")]
         public IActionResult Desactivar (int id)
         {
             if (id == 0)
@@ -138,6 +126,7 @@ namespace EjercicioCrud20_07.Controllers
             return RedirectToAction("Index");
 
         }
+        [Authorize(Roles = "Generador")]
         public IActionResult Activar(int id)
         {
             if (id == 0)

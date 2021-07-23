@@ -32,9 +32,22 @@ namespace EjercicioCrud20_07
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<ApplicationUser, UserRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(co =>
+           {
+               co.Cookie.HttpOnly = true;
+               co.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+               co.LoginPath = "/Identity/Account/Login";
+               co.AccessDeniedPath = "/Identity/Account/AccessDenied";
+               co.SlidingExpiration = true;
+           }
+            );
+
+
             services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
