@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EjercicioCrud20_07.Models
+namespace EjercicioCrud.ViewModel
 {
-    public class Persona
+    public class PersonaViewModel
     {
         public int Codigo { get; set; }
         public string Nombre { get; set; }
@@ -13,8 +13,7 @@ namespace EjercicioCrud20_07.Models
         public string Direccion { get; set; }
         public int Estado { get; set; }
         public int CodigoGenero { get; set; }
-
-        public virtual Genero CodigoGeneroNavigation { get; set; }
-
+        public string DescripcionGenero { get; set; }
     }
+
 }

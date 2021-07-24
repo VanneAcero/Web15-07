@@ -1,7 +1,9 @@
-﻿using EjercicioCrud20_07.Data;
+﻿using EjercicioCrud.ViewModel;
+using EjercicioCrud20_07.Data;
 using EjercicioCrud20_07.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +23,18 @@ namespace EjercicioCrud20_07.Controllers
         [Authorize (Roles ="Generador,Cliente")] 
         public IActionResult Index()
         {
-            List<Persona> personas = new List<Persona>();
+            List<PersonaViewModel> personas = new List<PersonaViewModel>();
             try
             {
-                personas = _applicationDbContext.Persona.ToList();
+                personas = _applicationDbContext.Persona.Select( d=> new PersonaViewModel
+                {
+                        Codigo=d.Codigo,
+                        Nombre=d.Nombre,
+                        Apellido=d.Apellido,
+                        Estado=d.Estado,
+                        Direccion=d.Direccion,
+                        DescripcionGenero=d.CodigoGeneroNavigation.Descripcion
+                }).ToList();
             }
             catch (Exception ex)
             {
@@ -51,7 +61,9 @@ namespace EjercicioCrud20_07.Controllers
         [Authorize(Roles = "Generador")]
         public IActionResult Create()
         {
-            
+
+            ViewData["CodigoGenero"] = new SelectList(_applicationDbContext.Generos.Where(v => v.Estado == 1).ToList(), "Codigo", "Descripcion");
+
             return View();
         }
         [Authorize(Roles = "Generador")]
@@ -66,6 +78,7 @@ namespace EjercicioCrud20_07.Controllers
             }
             catch (Exception)
             {
+                ViewData["CodigoGenero"] = new SelectList(_applicationDbContext.Generos.Where(v => v.Estado == 1).ToList(), "Codigo", "Descripcion",persona.CodigoGenero);
                 return View(persona);
             }
             
@@ -82,6 +95,7 @@ namespace EjercicioCrud20_07.Controllers
             Persona persona = _applicationDbContext.Persona.Where(v => v.Codigo == id).FirstOrDefault();
             if (persona == null)
                 return RedirectToAction("Index");
+            ViewData["CodigoGenero"] = new SelectList(_applicationDbContext.Generos.Where(v => v.Estado == 1).ToList(), "Codigo", "Descripcion",persona.CodigoGenero);
             return View(persona);
         }
         [Authorize(Roles = "Generador")]
@@ -98,6 +112,7 @@ namespace EjercicioCrud20_07.Controllers
             }
             catch (Exception)
             {
+                ViewData["CodigoGenero"] = new SelectList(_applicationDbContext.Generos.Where(v => v.Estado == 1).ToList(), "Codigo", "Descripcion", persona.CodigoGenero);
                 return View(persona);
             }
 

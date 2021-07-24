@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web15-07", "Web15-07\Web15-07.csproj", "{F0643EA4-3B06-4376-9A84-EED74F967908}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EjercicioCrud20-07", "EjercicioCrud20-07\EjercicioCrud20-07.csproj", "{A0F754D1-CD27-4CB8-912C-D22CF8D58C17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EjercicioCrud", "EjercicioCrud20-07\EjercicioCrud.csproj", "{A0F754D1-CD27-4CB8-912C-D22CF8D58C17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

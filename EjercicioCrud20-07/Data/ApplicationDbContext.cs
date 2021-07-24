@@ -9,40 +9,58 @@ namespace EjercicioCrud20_07.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, UserRole, string>
     {
+        
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
 
         }
         public virtual DbSet<Persona> Persona { get; set; }
-        protected override void OnModelCreating(ModelBuilder builder)
+        public virtual DbSet<Genero> Generos { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
-            builder.Entity<Persona>(va =>
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Genero>(entity =>
             {
-                va.HasKey(v => v.Codigo);
+                entity.HasKey(e => e.Codigo);
 
-                va.Property(v => v.Nombre)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
+                entity.ToTable("Genero");
 
-                va.Property(v => v.Apellido)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
+                entity.Property(e => e.Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
 
-                va.Property(v => v.Direccion)
-                .IsRequired()
-                .HasMaxLength(250)
-                .IsUnicode(false);
+            modelBuilder.Entity<Persona>(entity =>
+            {
+                entity.HasKey(e => e.Codigo)
+                    .HasName("PK__Persona__06370DAD99F7AEF7");
 
-                va.Property(v => v.Estado)
-                .IsRequired()
-                //.HasMaxLength(250)
-                .IsUnicode(false);
+                entity.ToTable("Persona");
 
+                entity.Property(e => e.Apellido)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
+                entity.Property(e => e.Direccion)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CodigoGeneroNavigation)
+                    .WithMany(p => p.Personas)
+                    .HasForeignKey(d => d.CodigoGenero)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Persona_Genero");
             });
         }
 
